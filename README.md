@@ -2,6 +2,37 @@
 
 一款纯离线、极简、高精度的 Android 原生预算管控记账工具（Kotlin + Jetpack Compose + Material 3 + Room）。
 
+> **最新安装包下载**：前往 [Releases v1.5](https://github.com/xushanzhenxun2233/SuperXiao-BudgetTracker/releases/tag/v1.5) 直接下载 `SuperXiao-BudgetTracker-v1.5.apk` 安装体验。
+
+## 界面与功能展示
+
+<table>
+  <tr>
+    <td align="center" width="50%">
+      <img src="docs/screenshots/home_dashboard.jpg" alt="首页预算大卡片与快捷扣款" width="100%" /><br />
+      <b>首页预算管控 & 快捷扣款</b><br />
+      <sub>剩余金额大卡片、每日自动/计划预算测算、一键快捷扣款</sub>
+    </td>
+    <td align="center" width="50%">
+      <img src="docs/screenshots/settings_features.jpg" alt="设置页：定时提醒、图标切换、生物识别、本地备份" width="100%" /><br />
+      <b>丰富个性化设置</b><br />
+      <sub>定时提醒快捷回复、4 款角色图标切换、隐私锁、JSON 备份</sub>
+    </td>
+  </tr>
+  <tr>
+    <td align="center" width="50%">
+      <img src="docs/screenshots/biometric_lock.jpg" alt="指纹与人脸生物识别解锁保护" width="100%" /><br />
+      <b>指纹 / 人脸生物识别锁</b><br />
+      <sub>切后台即刻自动锁定，支持指纹、人脸及系统锁屏密码兜底</sub>
+    </td>
+    <td align="center" width="50%">
+      <img src="docs/screenshots/release_overview.jpg" alt="v1.5 版本特性总览" width="100%" /><br />
+      <b>v1.5 版本总览</b><br />
+      <sub>纯离线无广告、Google Material 3 动态取色与深浅色适配</sub>
+    </td>
+  </tr>
+</table>
+
 ## 核心功能
 
 - **预算管控与结余预测**：
