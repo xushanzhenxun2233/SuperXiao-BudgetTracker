@@ -1,4 +1,4 @@
-package com.superxiao.budgettracker.data
+package com.yanqijian.budgettracker.data
 
 import android.content.Context
 import androidx.room.Database

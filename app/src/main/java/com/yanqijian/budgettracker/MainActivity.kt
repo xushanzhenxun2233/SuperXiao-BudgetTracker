@@ -1,4 +1,4 @@
-package com.superxiao.budgettracker
+package com.yanqijian.budgettracker
 
 import android.Manifest
 import android.content.Context
@@ -51,18 +51,18 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.superxiao.budgettracker.data.BudgetDatabase
-import com.superxiao.budgettracker.data.BudgetRepository
-import com.superxiao.budgettracker.notification.NotificationHelper
-import com.superxiao.budgettracker.security.BiometricLockManager
-import com.superxiao.budgettracker.ui.AboutMeScreen
-import com.superxiao.budgettracker.ui.AppIconManager
-import com.superxiao.budgettracker.ui.BudgetViewModel
-import com.superxiao.budgettracker.ui.BudgetViewModelFactory
-import com.superxiao.budgettracker.ui.HistoryScreen
-import com.superxiao.budgettracker.ui.HomeScreen
-import com.superxiao.budgettracker.ui.SettingsScreen
-import com.superxiao.budgettracker.ui.theme.BudgetTrackerTheme
+import com.yanqijian.budgettracker.data.BudgetDatabase
+import com.yanqijian.budgettracker.data.BudgetRepository
+import com.yanqijian.budgettracker.notification.NotificationHelper
+import com.yanqijian.budgettracker.security.BiometricLockManager
+import com.yanqijian.budgettracker.ui.AboutMeScreen
+import com.yanqijian.budgettracker.ui.AppIconManager
+import com.yanqijian.budgettracker.ui.BudgetViewModel
+import com.yanqijian.budgettracker.ui.BudgetViewModelFactory
+import com.yanqijian.budgettracker.ui.HistoryScreen
+import com.yanqijian.budgettracker.ui.HomeScreen
+import com.yanqijian.budgettracker.ui.SettingsScreen
+import com.yanqijian.budgettracker.ui.theme.BudgetTrackerTheme
 
 class MainActivity : FragmentActivity() {
 
@@ -190,7 +190,7 @@ class MainActivity : FragmentActivity() {
                                 onboardingPrefs.edit().putBoolean("first_launch_perm_prompted", true).apply()
                                 showFirstLaunchPermDialog = false
                             },
-                            title = { Text("欢迎使用超级魈的记账工具") },
+                            title = { Text("欢迎使用岩契笺") },
                             text = {
                                 Text("为了支持「定时记账提醒」与「通知栏原生快捷回复记账」，建议授予通知权限。本应用纯本地运行，不会联网上传任何数据。")
                             },
@@ -320,7 +320,7 @@ private fun BiometricLockOverlay(
             )
             Spacer(modifier = Modifier.height(20.dp))
             Text(
-                text = "超级魈的记账工具",
+                text = "岩契笺",
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onBackground

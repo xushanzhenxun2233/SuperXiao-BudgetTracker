@@ -1,4 +1,4 @@
-package com.superxiao.budgettracker.notification
+package com.yanqijian.budgettracker.notification
 
 import android.content.BroadcastReceiver
 import android.content.Context

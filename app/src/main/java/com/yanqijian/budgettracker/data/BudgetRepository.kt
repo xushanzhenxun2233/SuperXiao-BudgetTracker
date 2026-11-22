@@ -1,4 +1,4 @@
-package com.superxiao.budgettracker.data
+package com.yanqijian.budgettracker.data
 
 import androidx.room.withTransaction
 import kotlinx.coroutines.flow.Flow
@@ -139,7 +139,7 @@ class BudgetRepository(private val database: BudgetDatabase) {
         }
     }
 
-    suspend fun exportBackupJson(reminders: List<com.superxiao.budgettracker.notification.ReminderSlot> = emptyList()): String {
+    suspend fun exportBackupJson(reminders: List<com.yanqijian.budgettracker.notification.ReminderSlot> = emptyList()): String {
         return database.withTransaction {
             val periods = dao.getAllPeriodsOnce()
             val expenses = dao.getAllExpensesOnce()
@@ -148,7 +148,7 @@ class BudgetRepository(private val database: BudgetDatabase) {
         }
     }
 
-    suspend fun importBackupJson(jsonText: String): Result<List<com.superxiao.budgettracker.notification.ReminderSlot>> {
+    suspend fun importBackupJson(jsonText: String): Result<List<com.yanqijian.budgettracker.notification.ReminderSlot>> {
         val parsed = BackupManager.parseAndValidate(jsonText)
         val payload = parsed.getOrElse { return Result.failure(it) }
         return try {

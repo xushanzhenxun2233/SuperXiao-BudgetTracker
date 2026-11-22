@@ -1,4 +1,4 @@
-package com.superxiao.budgettracker.ui
+package com.yanqijian.budgettracker.ui
 
 import android.Manifest
 import android.content.Intent
@@ -96,13 +96,13 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.superxiao.budgettracker.data.MoneyUtils
-import com.superxiao.budgettracker.data.QuickButtonEntity
-import com.superxiao.budgettracker.notification.NotificationHelper
-import com.superxiao.budgettracker.notification.ReminderPrefs
-import com.superxiao.budgettracker.notification.ReminderScheduler
-import com.superxiao.budgettracker.notification.ReminderSlot
-import com.superxiao.budgettracker.security.BiometricLockManager
+import com.yanqijian.budgettracker.data.MoneyUtils
+import com.yanqijian.budgettracker.data.QuickButtonEntity
+import com.yanqijian.budgettracker.notification.NotificationHelper
+import com.yanqijian.budgettracker.notification.ReminderPrefs
+import com.yanqijian.budgettracker.notification.ReminderScheduler
+import com.yanqijian.budgettracker.notification.ReminderSlot
+import com.yanqijian.budgettracker.security.BiometricLockManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -222,7 +222,7 @@ fun SettingsScreen(
                 val json = viewModel.exportBackupJson(ReminderPrefs.loadSlots(context))
                 val file = withContext(Dispatchers.IO) {
                     val dir = File(context.cacheDir, "backups").apply { mkdirs() }
-                    val target = File(dir, "superxiao-budget-backup-${LocalDate.now()}.json")
+                    val target = File(dir, "yanqijian-budget-backup-${LocalDate.now()}.json")
                     target.writeText(json, Charsets.UTF_8)
                     target
                 }
@@ -234,7 +234,7 @@ fun SettingsScreen(
                 val shareIntent = Intent(Intent.ACTION_SEND).apply {
                     type = "application/json"
                     putExtra(Intent.EXTRA_STREAM, uri)
-                    putExtra(Intent.EXTRA_SUBJECT, "超级魈的记账工具备份")
+                    putExtra(Intent.EXTRA_SUBJECT, "岩契笺备份")
                     addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
                 }
                 context.startActivity(Intent.createChooser(shareIntent, "分享备份文件到"))
@@ -676,7 +676,7 @@ fun SettingsScreen(
                             OutlinedButton(
                                 onClick = {
                                     try {
-                                        val fileName = "superxiao-budget-backup-${LocalDate.now()}.json"
+                                        val fileName = "yanqijian-budget-backup-${LocalDate.now()}.json"
                                         exportBackupLauncher.launch(fileName)
                                     } catch (e: Exception) {
                                         scope.launch { snackbarHostState.showSnackbar("无法打开文件保存器：${e.message}") }

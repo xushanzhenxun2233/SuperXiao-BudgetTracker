@@ -1,4 +1,4 @@
-package com.superxiao.budgettracker.data
+package com.yanqijian.budgettracker.data
 
 import androidx.room.Entity
 import androidx.room.ForeignKey

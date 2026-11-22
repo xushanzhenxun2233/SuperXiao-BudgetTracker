@@ -1,4 +1,4 @@
-package com.superxiao.budgettracker.ui
+package com.yanqijian.budgettracker.ui
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -75,9 +75,9 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.superxiao.budgettracker.data.ExpenseRecordEntity
-import com.superxiao.budgettracker.data.MoneyUtils
-import com.superxiao.budgettracker.data.QuickButtonEntity
+import com.yanqijian.budgettracker.data.ExpenseRecordEntity
+import com.yanqijian.budgettracker.data.MoneyUtils
+import com.yanqijian.budgettracker.data.QuickButtonEntity
 import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalTime
@@ -124,7 +124,7 @@ fun HomeScreen(
         contentColor = MaterialTheme.colorScheme.onBackground,
         topBar = {
             TopAppBar(
-                title = { Text("超级魈的记账工具", fontWeight = FontWeight.Bold) },
+                title = { Text("岩契笺", fontWeight = FontWeight.Bold) },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = Color.Transparent,
                     titleContentColor = MaterialTheme.colorScheme.onBackground,

@@ -1,19 +1,19 @@
-package com.superxiao.budgettracker.ui
+package com.yanqijian.budgettracker.ui
 
 import android.content.ComponentName
 import android.content.Context
 import android.content.pm.PackageManager
-import com.superxiao.budgettracker.R
+import com.yanqijian.budgettracker.R
 
 enum class AppIconOption(
     val aliasClassName: String,
     val displayName: String,
     val previewRes: Int
 ) {
-    AYAKA("com.superxiao.budgettracker.IconAyakaAlias", "神里绫华", R.drawable.icon_preview_ayaka),
-    HUTAO("com.superxiao.budgettracker.IconHutaoAlias", "胡桃", R.drawable.icon_preview_hutao),
-    NAVY("com.superxiao.budgettracker.IconNavyAlias", "派蒙", R.drawable.icon_preview_navy),
-    KEQING("com.superxiao.budgettracker.IconKeqingAlias", "刻晴", R.drawable.icon_preview_keqing)
+    AYAKA("com.yanqijian.budgettracker.IconAyakaAlias", "神里绫华", R.drawable.icon_preview_ayaka),
+    HUTAO("com.yanqijian.budgettracker.IconHutaoAlias", "胡桃", R.drawable.icon_preview_hutao),
+    NAVY("com.yanqijian.budgettracker.IconNavyAlias", "派蒙", R.drawable.icon_preview_navy),
+    KEQING("com.yanqijian.budgettracker.IconKeqingAlias", "刻晴", R.drawable.icon_preview_keqing)
 }
 
 object AppIconManager {

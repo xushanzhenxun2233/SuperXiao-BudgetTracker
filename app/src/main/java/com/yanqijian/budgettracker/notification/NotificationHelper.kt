@@ -1,4 +1,4 @@
-package com.superxiao.budgettracker.notification
+package com.yanqijian.budgettracker.notification
 
 import android.Manifest
 import android.app.NotificationChannel
@@ -14,8 +14,8 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.app.RemoteInput
 import androidx.core.content.ContextCompat
-import com.superxiao.budgettracker.MainActivity
-import com.superxiao.budgettracker.R
+import com.yanqijian.budgettracker.MainActivity
+import com.yanqijian.budgettracker.R
 
 object NotificationHelper {
     const val CHANNEL_ID = "budget_reminder_channel"
@@ -136,7 +136,7 @@ object NotificationHelper {
 
             val notification = NotificationCompat.Builder(context, CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_stat_budget)
-                .setContentTitle("超级魈提醒你记账啦 · $slotLabel")
+                .setContentTitle("岩契笺提醒你记账啦 · $slotLabel")
                 .setContentText("点击下方「快捷记账」直接回复金额（如 25 午餐）即可扣款")
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setContentIntent(openAppPendingIntent)

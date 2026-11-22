@@ -6,11 +6,11 @@ plugins {
 }
 
 android {
-    namespace = "com.superxiao.budgettracker"
+    namespace = "com.yanqijian.budgettracker"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.superxiao.budgettracker"
+        applicationId = "com.yanqijian.budgettracker"
         minSdk = 26
         targetSdk = 34
         versionCode = 25

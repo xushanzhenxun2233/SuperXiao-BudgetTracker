@@ -1,4 +1,4 @@
-package com.superxiao.budgettracker.ui
+package com.yanqijian.budgettracker.ui
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -39,7 +39,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.superxiao.budgettracker.data.MoneyUtils
+import com.yanqijian.budgettracker.data.MoneyUtils
 import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter

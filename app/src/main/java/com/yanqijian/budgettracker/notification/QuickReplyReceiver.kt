@@ -1,12 +1,12 @@
-package com.superxiao.budgettracker.notification
+package com.yanqijian.budgettracker.notification
 
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import androidx.core.app.RemoteInput
-import com.superxiao.budgettracker.data.BudgetDatabase
-import com.superxiao.budgettracker.data.BudgetRepository
-import com.superxiao.budgettracker.data.MoneyUtils
+import com.yanqijian.budgettracker.data.BudgetDatabase
+import com.yanqijian.budgettracker.data.BudgetRepository
+import com.yanqijian.budgettracker.data.MoneyUtils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

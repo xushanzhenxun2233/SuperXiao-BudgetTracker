@@ -1,6 +1,6 @@
-package com.superxiao.budgettracker.data
+package com.yanqijian.budgettracker.data
 
-import com.superxiao.budgettracker.notification.ReminderSlot
+import com.yanqijian.budgettracker.notification.ReminderSlot
 import org.json.JSONArray
 import org.json.JSONObject
 import java.time.Instant

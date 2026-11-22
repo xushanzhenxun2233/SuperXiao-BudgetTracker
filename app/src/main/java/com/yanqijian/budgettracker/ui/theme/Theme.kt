@@ -1,4 +1,4 @@
-package com.superxiao.budgettracker.ui.theme
+package com.yanqijian.budgettracker.ui.theme
 
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme

@@ -1,4 +1,4 @@
-package com.superxiao.budgettracker.security
+package com.yanqijian.budgettracker.security
 
 import android.content.Context
 import android.os.Build
@@ -48,7 +48,7 @@ object BiometricLockManager {
     fun authenticate(
         activity: FragmentActivity,
         title: String = "验证身份以进入",
-        subtitle: String = "请使用指纹、人脸或锁屏密码解锁超级魈的记账工具",
+        subtitle: String = "请使用指纹、人脸或锁屏密码解锁岩契笺",
         onSuccess: () -> Unit,
         onError: (String) -> Unit
     ) {

@@ -1,4 +1,4 @@
-# 超级魈的记账工具 (SuperXiao Budget Tracker)
+# 岩契笺 (YanQiJian)
 
 ![Kotlin](https://img.shields.io/badge/Kotlin-2.0.20-7F52FF?style=flat-square&logo=kotlin&logoColor=white)
 ![Jetpack Compose](https://img.shields.io/badge/Jetpack_Compose-Material_3-4285F4?style=flat-square&logo=jetpackcompose&logoColor=white)
@@ -9,7 +9,7 @@
 一款**纯离线、零网络权限、金融级整数分精度**的 Android 原生减法预算管控工具。  
 拒绝事后焦虑式「累计记账」与臃肿分类图表，以**预算倒扣模型 + 每日结余推演 + 系统级零摩擦录入**为核心，用现代 Android 工程实践打造极致克制且可靠的本地财务工具。
 
-> **立即下载 APK**：前往 [Releases v2.5](https://github.com/xushanzhenxun2233/SuperXiao-BudgetTracker/releases/tag/v2.5) 获取最新构建的 `SuperXiao-BudgetTracker-v2.5.apk`。
+> **立即下载 APK**：前往 [Releases v2.5](https://github.com/xushanzhenxun2233/SuperXiao-BudgetTracker/releases/tag/v2.5) 获取最新构建的 `YanQiJian-v2.5.apk`。
 
 ---
 
@@ -74,7 +74,7 @@
 - **系统集成**：`androidx.biometric:biometric:1.1.0` · `NotificationCompat` + `RemoteInput` · `AlarmManager` · SAF & `FileProvider`
 
 ```text
-app/src/main/java/com/superxiao/budgettracker/
+app/src/main/java/com/yanqijian/budgettracker/
 ├── MainActivity.kt                  # 单 Activity 宿主、全局白天剪影背景、生命周期生物识别锁与延迟换图标
 ├── data/
 │   ├── MoneyUtils.kt                # BigDecimal 精确解析、整数分格式化、跨月/闰年剩余天数与日均算法

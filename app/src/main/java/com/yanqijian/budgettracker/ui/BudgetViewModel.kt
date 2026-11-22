@@ -1,13 +1,13 @@
-package com.superxiao.budgettracker.ui
+package com.yanqijian.budgettracker.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.superxiao.budgettracker.data.BudgetPeriodEntity
-import com.superxiao.budgettracker.data.BudgetRepository
-import com.superxiao.budgettracker.data.ExpenseRecordEntity
-import com.superxiao.budgettracker.data.MoneyUtils
-import com.superxiao.budgettracker.data.QuickButtonEntity
+import com.yanqijian.budgettracker.data.BudgetPeriodEntity
+import com.yanqijian.budgettracker.data.BudgetRepository
+import com.yanqijian.budgettracker.data.ExpenseRecordEntity
+import com.yanqijian.budgettracker.data.MoneyUtils
+import com.yanqijian.budgettracker.data.QuickButtonEntity
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -291,12 +291,12 @@ class BudgetViewModel(private val repository: BudgetRepository) : ViewModel() {
     }
 
     suspend fun exportBackupJson(
-        reminders: List<com.superxiao.budgettracker.notification.ReminderSlot> = emptyList()
+        reminders: List<com.yanqijian.budgettracker.notification.ReminderSlot> = emptyList()
     ): String = repository.exportBackupJson(reminders)
 
     fun importBackupJson(
         jsonText: String,
-        onRemindersRestored: (List<com.superxiao.budgettracker.notification.ReminderSlot>) -> Unit = {}
+        onRemindersRestored: (List<com.yanqijian.budgettracker.notification.ReminderSlot>) -> Unit = {}
     ) {
         viewModelScope.launch {
             val result = repository.importBackupJson(jsonText)

@@ -1,4 +1,4 @@
-package com.superxiao.budgettracker.notification
+package com.yanqijian.budgettracker.notification
 
 import android.app.AlarmManager
 import android.app.PendingIntent

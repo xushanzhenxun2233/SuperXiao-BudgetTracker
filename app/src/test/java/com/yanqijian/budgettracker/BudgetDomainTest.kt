@@ -1,10 +1,10 @@
-package com.superxiao.budgettracker
+package com.yanqijian.budgettracker
 
-import com.superxiao.budgettracker.data.BackupManager
-import com.superxiao.budgettracker.data.BudgetPeriodEntity
-import com.superxiao.budgettracker.data.ExpenseRecordEntity
-import com.superxiao.budgettracker.data.MoneyUtils
-import com.superxiao.budgettracker.data.QuickButtonEntity
+import com.yanqijian.budgettracker.data.BackupManager
+import com.yanqijian.budgettracker.data.BudgetPeriodEntity
+import com.yanqijian.budgettracker.data.ExpenseRecordEntity
+import com.yanqijian.budgettracker.data.MoneyUtils
+import com.yanqijian.budgettracker.data.QuickButtonEntity
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertNull
