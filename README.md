@@ -2,7 +2,7 @@
 
 一款纯离线、极简、高精度的 Android 原生预算管控记账工具（Kotlin + Jetpack Compose + Material 3 + Room）。
 
-> **最新安装包下载**：前往 [Releases v1.5](https://github.com/xushanzhenxun2233/SuperXiao-BudgetTracker/releases/tag/v1.5) 直接下载 `SuperXiao-BudgetTracker-v1.5.apk` 安装体验。
+> **最新安装包下载**：前往 [Releases v2.0](https://github.com/xushanzhenxun2233/SuperXiao-BudgetTracker/releases/tag/v2.0) 直接下载 `SuperXiao-BudgetTracker-v2.0.apk` 安装体验。
 
 ## 界面与功能展示
 
