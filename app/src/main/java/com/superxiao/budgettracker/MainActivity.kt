@@ -72,8 +72,33 @@ class MainActivity : FragmentActivity() {
 
     private var isUnlocked by mutableStateOf(true)
     private var authError by mutableStateOf<String?>(null)
-    private var resumeAuthTick by mutableStateOf(0)
     private var isAuthenticating = false
+    private var pendingAutoAuth = false
+
+    private fun triggerBiometricAuth() {
+        authError = null
+        if (!BiometricLockManager.canAuthenticate(this)) {
+            sessionUnlocked = true
+            isUnlocked = true
+            pendingAutoAuth = false
+            return
+        }
+        if (isAuthenticating) return
+        isAuthenticating = true
+        pendingAutoAuth = false
+        BiometricLockManager.authenticate(
+            activity = this,
+            onSuccess = {
+                isAuthenticating = false
+                sessionUnlocked = true
+                isUnlocked = true
+            },
+            onError = { msg ->
+                isAuthenticating = false
+                authError = msg
+            }
+        )
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -84,6 +109,9 @@ class MainActivity : FragmentActivity() {
         isUnlocked = !lockEnabled || (savedInstanceState != null && sessionUnlocked)
         if (isUnlocked) {
             sessionUnlocked = true
+            pendingAutoAuth = false
+        } else {
+            pendingAutoAuth = true
         }
 
         val database = BudgetDatabase.getInstance(applicationContext)
@@ -108,28 +136,6 @@ class MainActivity : FragmentActivity() {
                 ) { _ ->
                     onboardingPrefs.edit().putBoolean("first_launch_perm_prompted", true).apply()
                     showFirstLaunchPermDialog = false
-                }
-
-                val triggerAuth = {
-                    authError = null
-                    if (!BiometricLockManager.canAuthenticate(this)) {
-                        sessionUnlocked = true
-                        isUnlocked = true
-                    } else if (!isAuthenticating) {
-                        isAuthenticating = true
-                        BiometricLockManager.authenticate(
-                            activity = this,
-                            onSuccess = {
-                                isAuthenticating = false
-                                sessionUnlocked = true
-                                isUnlocked = true
-                            },
-                            onError = { msg ->
-                                isAuthenticating = false
-                                authError = msg
-                            }
-                        )
-                    }
                 }
 
                 Box(
@@ -222,16 +228,11 @@ class MainActivity : FragmentActivity() {
 
                     // 全屏不透明生物识别锁遮罩层
                     if (!isUnlocked) {
-                        LaunchedEffect(resumeAuthTick) {
-                            if (resumeAuthTick > 0) {
-                                triggerAuth()
-                            }
-                        }
                         BiometricLockOverlay(
                             isDark = isDark,
                             iconRes = remember { AppIconManager.getCurrentIcon(this@MainActivity).previewRes },
                             errorMessage = authError,
-                            onUnlockClick = triggerAuth
+                            onUnlockClick = { triggerBiometricAuth() }
                         )
                     }
                 }
@@ -241,8 +242,24 @@ class MainActivity : FragmentActivity() {
 
     override fun onResume() {
         super.onResume()
-        if (!isUnlocked && !isAuthenticating && BiometricLockManager.isLockEnabled(this)) {
-            resumeAuthTick++
+        if (!isUnlocked && pendingAutoAuth && !isAuthenticating && hasWindowFocus()) {
+            window.decorView.post {
+                if (!isUnlocked && pendingAutoAuth && !isAuthenticating && hasWindowFocus()) {
+                    triggerBiometricAuth()
+                }
+            }
+        }
+    }
+
+    override fun onWindowFocusChanged(hasFocus: Boolean) {
+        super.onWindowFocusChanged(hasFocus)
+        // 从多任务/后台切回时，等窗口真正获得焦点再弹出 BiometricPrompt，避免被系统丢弃
+        if (hasFocus && !isUnlocked && pendingAutoAuth && !isAuthenticating) {
+            window.decorView.post {
+                if (!isUnlocked && pendingAutoAuth && !isAuthenticating && hasWindowFocus()) {
+                    triggerBiometricAuth()
+                }
+            }
         }
     }
 
@@ -251,10 +268,11 @@ class MainActivity : FragmentActivity() {
         if (!isChangingConfigurations) {
             // 退回桌面/后台时安全应用已选择的桌面图标，避免前台被系统杀进程
             AppIconManager.applyPendingIconIfNeeded(applicationContext)
-            // 切到后台或退出 APP 时立即上锁（排除深浅色切换/横竖屏旋转及系统生物识别弹窗本身）
+            // 切到后台、多任务或退出 APP 时立即上锁（排除深浅色切换/横竖屏旋转及系统生物识别弹窗本身）
             if (!isAuthenticating && BiometricLockManager.isLockEnabled(this)) {
                 sessionUnlocked = false
                 isUnlocked = false
+                pendingAutoAuth = true
                 authError = null
             }
         }
