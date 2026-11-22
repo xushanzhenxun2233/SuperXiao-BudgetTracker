@@ -7,7 +7,9 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Build
+import android.provider.Settings
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.app.RemoteInput
@@ -37,15 +39,51 @@ object NotificationHelper {
     }
 
     fun hasNotificationPermission(context: Context): Boolean {
-        val granted = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            ContextCompat.checkSelfPermission(
-                context,
-                Manifest.permission.POST_NOTIFICATIONS
-            ) == PackageManager.PERMISSION_GRANTED
-        } else {
-            true
+        return try {
+            val granted = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                ContextCompat.checkSelfPermission(
+                    context,
+                    Manifest.permission.POST_NOTIFICATIONS
+                ) == PackageManager.PERMISSION_GRANTED
+            } else {
+                true
+            }
+            granted && NotificationManagerCompat.from(context).areNotificationsEnabled()
+        } catch (_: Exception) {
+            false
         }
-        return granted && NotificationManagerCompat.from(context).areNotificationsEnabled()
+    }
+
+    /**
+     * 三层兜底跳转应用通知设置页，兼容 ColorOS / 一加 / 小米 / 华为 / 原生 Android：
+     * 1) 应用通知设置页 -> 2) 应用详情页 -> 3) 系统设置首页
+     */
+    fun openNotificationSettings(context: Context): Boolean {
+        val candidates = listOf(
+            Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS).apply {
+                putExtra(Settings.EXTRA_APP_PACKAGE, context.packageName)
+                putExtra("app_package", context.packageName)
+                putExtra("app_uid", context.applicationInfo.uid)
+                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            },
+            Intent(
+                Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                Uri.fromParts("package", context.packageName, null)
+            ).apply {
+                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            },
+            Intent(Settings.ACTION_SETTINGS).apply {
+                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            }
+        )
+        for (intent in candidates) {
+            try {
+                context.startActivity(intent)
+                return true
+            } catch (_: Exception) {
+            }
+        }
+        return false
     }
 
     fun showReminderNotification(

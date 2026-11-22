@@ -183,15 +183,13 @@ class MainActivity : FragmentActivity() {
                                         onboardingPrefs.edit().putBoolean("first_launch_perm_prompted", true).apply()
                                         showFirstLaunchPermDialog = false
                                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                                            firstLaunchPermLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
-                                        } else {
                                             try {
-                                                val intent = Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS).apply {
-                                                    putExtra(Settings.EXTRA_APP_PACKAGE, packageName)
-                                                }
-                                                startActivity(intent)
+                                                firstLaunchPermLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
                                             } catch (_: Exception) {
+                                                NotificationHelper.openNotificationSettings(this@MainActivity)
                                             }
+                                        } else {
+                                            NotificationHelper.openNotificationSettings(this@MainActivity)
                                         }
                                     }
                                 ) {

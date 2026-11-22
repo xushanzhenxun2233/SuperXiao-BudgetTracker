@@ -157,12 +157,8 @@ fun SettingsScreen(
     }
 
     fun openAppNotificationSettings() {
-        try {
-            val intent = Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS).apply {
-                putExtra(Settings.EXTRA_APP_PACKAGE, context.packageName)
-            }
-            context.startActivity(intent)
-        } catch (_: Exception) {
+        val opened = NotificationHelper.openNotificationSettings(context)
+        if (!opened) {
             scope.launch {
                 snackbarHostState.showSnackbar("请在手机系统设置中手动开启本应用的通知权限")
             }
@@ -252,22 +248,8 @@ fun SettingsScreen(
     }
 
     fun requestNotificationPermissionOrOpenSettings() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            val activity = context as? FragmentActivity
-            val shouldShow = activity?.shouldShowRequestPermissionRationale(Manifest.permission.POST_NOTIFICATIONS) ?: true
-            if (shouldShow) {
-                try {
-                    notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
-                } catch (_: Exception) {
-                    openAppNotificationSettings()
-                }
-            } else {
-                // 系统弹窗已被永久拒绝或首次未触发时，先尝试申请，若不行再跳设置
-                openAppNotificationSettings()
-            }
-        } else {
-            openAppNotificationSettings()
-        }
+        // 直接跳转到本应用的系统通知/应用详情页，避免被系统重复拒绝策略拦截导致无反应
+        openAppNotificationSettings()
     }
 
     fun updateSlot(updated: ReminderSlot) {
