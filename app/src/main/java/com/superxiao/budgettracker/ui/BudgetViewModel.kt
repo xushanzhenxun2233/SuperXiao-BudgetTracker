@@ -43,6 +43,7 @@ data class BudgetUiState(
     val customDailyBudgetCents: Long? = null,
     val quickButtons: List<QuickButtonEntity> = emptyList(),
     val expenses: List<ExpenseRecordEntity> = emptyList(),
+    val allExpenses: List<ExpenseRecordEntity> = emptyList(),
     val periodHistories: List<PeriodHistorySummary> = emptyList()
 ) {
     val isPeriodEnded: Boolean
@@ -119,6 +120,7 @@ class BudgetViewModel(private val repository: BudgetRepository) : ViewModel() {
                 customDailyBudgetCents = active.customDailyBudgetCents,
                 quickButtons = buttons,
                 expenses = activeExpenses,
+                allExpenses = allExpenses,
                 periodHistories = histories
             )
         }

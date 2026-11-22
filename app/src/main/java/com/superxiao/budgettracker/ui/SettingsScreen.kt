@@ -6,6 +6,7 @@ import android.os.Build
 import android.provider.Settings
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -25,6 +26,7 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -32,6 +34,7 @@ import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowDownward
 import androidx.compose.material.icons.filled.ArrowUpward
+import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.DeleteOutline
 import androidx.compose.material.icons.filled.Download
@@ -80,8 +83,11 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.core.content.FileProvider
@@ -119,10 +125,20 @@ fun SettingsScreen(
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
     val context = LocalContext.current
+    val focusManager = LocalFocusManager.current
+    val keyboardController = LocalSoftwareKeyboardController.current
     val scope = rememberCoroutineScope()
 
     var budgetInput by remember(state.totalBudgetCents) {
         mutableStateOf(MoneyUtils.formatCentsForInput(state.totalBudgetCents))
+    }
+    var budgetSavedBanner by remember { mutableStateOf<String?>(null) }
+
+    LaunchedEffect(budgetSavedBanner) {
+        if (budgetSavedBanner != null) {
+            delay(3_500L)
+            budgetSavedBanner = null
+        }
     }
 
     var pickingStartDate by remember { mutableStateOf(false) }
@@ -293,22 +309,63 @@ fun SettingsScreen(
         ) {
             // 1. 当前周期总预算
             item {
+                val saveBudgetAction = {
+                    focusManager.clearFocus()
+                    keyboardController?.hide()
+                    val parsedCents = MoneyUtils.parseYuanToCents(budgetInput, allowZero = true)
+                    viewModel.updateTotalBudgetFromText(budgetInput)
+                    if (parsedCents != null) {
+                        budgetSavedBanner = "已保存！当前周期总预算已更新为 ¥${MoneyUtils.formatCents(parsedCents)}"
+                    }
+                }
                 SettingsCard(title = "当前周期总预算") {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        OutlinedTextField(
-                            value = budgetInput,
-                            onValueChange = { budgetInput = it },
-                            label = { Text("总预算金额 (元，最多两位小数)") },
-                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
-                            singleLine = true,
-                            modifier = Modifier.weight(1f)
-                        )
-                        Spacer(modifier = Modifier.width(10.dp))
-                        Button(onClick = { viewModel.updateTotalBudgetFromText(budgetInput) }) {
-                            Text("保存")
+                    Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            OutlinedTextField(
+                                value = budgetInput,
+                                onValueChange = { budgetInput = it },
+                                label = { Text("总预算金额 (元，最多两位小数)") },
+                                keyboardOptions = KeyboardOptions(
+                                    keyboardType = KeyboardType.Decimal,
+                                    imeAction = ImeAction.Done
+                                ),
+                                keyboardActions = KeyboardActions(onDone = { saveBudgetAction() }),
+                                singleLine = true,
+                                modifier = Modifier.weight(1f)
+                            )
+                            Spacer(modifier = Modifier.width(10.dp))
+                            Button(onClick = saveBudgetAction) {
+                                Text("保存")
+                            }
+                        }
+                        AnimatedVisibility(visible = budgetSavedBanner != null) {
+                            Surface(
+                                modifier = Modifier.fillMaxWidth(),
+                                shape = RoundedCornerShape(10.dp),
+                                color = MaterialTheme.colorScheme.tertiaryContainer
+                            ) {
+                                Row(
+                                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 10.dp),
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Default.CheckCircle,
+                                        contentDescription = null,
+                                        tint = MaterialTheme.colorScheme.onTertiaryContainer,
+                                        modifier = Modifier.size(18.dp)
+                                    )
+                                    Spacer(modifier = Modifier.width(8.dp))
+                                    Text(
+                                        text = budgetSavedBanner.orEmpty(),
+                                        style = MaterialTheme.typography.bodyMedium,
+                                        fontWeight = FontWeight.Bold,
+                                        color = MaterialTheme.colorScheme.onTertiaryContainer
+                                    )
+                                }
+                            }
                         }
                     }
                 }

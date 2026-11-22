@@ -47,6 +47,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SuggestionChip
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -225,6 +226,8 @@ fun HomeScreen(
 
     if (showManualDialog) {
         ManualExpenseDialog(
+            allExpenses = state.allExpenses,
+            quickButtons = state.quickButtons,
             onDismiss = { showManualDialog = false },
             onConfirm = { amountText, note, timestampMillis ->
                 viewModel.recordExpenseFromText(amountText, note, timestampMillis)
@@ -630,8 +633,11 @@ private fun ExpenseItemCard(
     }
 }
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 private fun ManualExpenseDialog(
+    allExpenses: List<ExpenseRecordEntity>,
+    quickButtons: List<QuickButtonEntity>,
     onDismiss: () -> Unit,
     onConfirm: (String, String, Long) -> Unit
 ) {
@@ -640,17 +646,31 @@ private fun ManualExpenseDialog(
     var selectedTimestamp by remember { mutableStateOf(System.currentTimeMillis()) }
     var showTimePicker by remember { mutableStateOf(false) }
 
-    val isValid = MoneyUtils.parseYuanToCents(amountText, allowZero = false) != null
+    val parsedCents = MoneyUtils.parseYuanToCents(amountText, allowZero = false)
+    val isValid = parsedCents != null
     val formattedTime = remember(selectedTimestamp) {
         val fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
         Instant.ofEpochMilli(selectedTimestamp).atZone(ZoneId.systemDefault()).format(fmt)
+    }
+
+    val suggestedNotes = remember(parsedCents, selectedTimestamp, allExpenses, quickButtons) {
+        if (parsedCents == null) {
+            emptyList()
+        } else {
+            computeSmartNoteSuggestions(
+                amountCents = parsedCents,
+                targetTimestampMillis = selectedTimestamp,
+                allExpenses = allExpenses,
+                quickButtons = quickButtons
+            )
+        }
     }
 
     AlertDialog(
         onDismissRequest = onDismiss,
         title = { Text("手动记一笔") },
         text = {
-            Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+            Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
                 OutlinedTextField(
                     value = amountText,
                     onValueChange = { amountText = it },
@@ -667,6 +687,26 @@ private fun ManualExpenseDialog(
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth()
                 )
+                if (suggestedNotes.isNotEmpty()) {
+                    Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                        Text(
+                            text = "猜你想记（点击快速填入）：",
+                            style = MaterialTheme.typography.labelSmall,
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                        FlowRow(
+                            horizontalArrangement = Arrangement.spacedBy(6.dp),
+                            verticalArrangement = Arrangement.spacedBy(4.dp)
+                        ) {
+                            suggestedNotes.forEach { suggestion ->
+                                SuggestionChip(
+                                    onClick = { noteText = suggestion },
+                                    label = { Text(suggestion) }
+                                )
+                            }
+                        }
+                    }
+                }
                 OutlinedButton(
                     onClick = { showTimePicker = true },
                     modifier = Modifier.fillMaxWidth(),
@@ -704,6 +744,59 @@ private fun ManualExpenseDialog(
             }
         )
     }
+}
+
+private fun timeOfDayBucket(timestampMillis: Long): Int {
+    val hour = Instant.ofEpochMilli(timestampMillis).atZone(ZoneId.systemDefault()).hour
+    return when (hour) {
+        in 5..10 -> 0   // 早上
+        in 11..14 -> 1  // 中午
+        in 15..17 -> 2  // 下午
+        in 18..23 -> 3  // 晚上
+        else -> 4       // 凌晨
+    }
+}
+
+private fun computeSmartNoteSuggestions(
+    amountCents: Long,
+    targetTimestampMillis: Long,
+    allExpenses: List<ExpenseRecordEntity>,
+    quickButtons: List<QuickButtonEntity>
+): List<String> {
+    val targetBucket = timeOfDayBucket(targetTimestampMillis)
+    val scores = mutableMapOf<String, Long>()
+    val latestTime = mutableMapOf<String, Long>()
+
+    allExpenses.forEach { expense ->
+        if (expense.amountCents == amountCents) {
+            val cleaned = expense.note.removePrefix("快捷扣款：").trim()
+            if (cleaned.isNotEmpty()) {
+                val sameBucketBonus = if (timeOfDayBucket(expense.timestampMillis) == targetBucket) 30L else 0L
+                scores[cleaned] = (scores[cleaned] ?: 0L) + 10L + sameBucketBonus
+                val prevLatest = latestTime[cleaned] ?: 0L
+                if (expense.timestampMillis > prevLatest) {
+                    latestTime[cleaned] = expense.timestampMillis
+                }
+            }
+        }
+    }
+
+    quickButtons.forEach { btn ->
+        if (btn.amountCents == amountCents) {
+            val cleaned = btn.label.trim()
+            if (cleaned.isNotEmpty()) {
+                scores[cleaned] = (scores[cleaned] ?: 0L) + 5L
+            }
+        }
+    }
+
+    return scores.entries
+        .sortedWith(
+            compareByDescending<Map.Entry<String, Long>> { it.value }
+                .thenByDescending { latestTime[it.key] ?: 0L }
+        )
+        .map { it.key }
+        .take(4)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
