@@ -66,6 +66,10 @@ import com.superxiao.budgettracker.ui.theme.BudgetTrackerTheme
 
 class MainActivity : FragmentActivity() {
 
+    companion object {
+        private var sessionUnlocked = false
+    }
+
     private var isUnlocked by mutableStateOf(true)
     private var authError by mutableStateOf<String?>(null)
     private var resumeAuthTick by mutableStateOf(0)
@@ -75,7 +79,12 @@ class MainActivity : FragmentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
-        isUnlocked = !BiometricLockManager.isLockEnabled(this)
+        val lockEnabled = BiometricLockManager.isLockEnabled(this)
+        // 若是应用内切换深浅色模式或旋转屏幕导致的配置重建，保持已解锁状态；冷启动或切后台返回则重新锁定
+        isUnlocked = !lockEnabled || (savedInstanceState != null && sessionUnlocked)
+        if (isUnlocked) {
+            sessionUnlocked = true
+        }
 
         val database = BudgetDatabase.getInstance(applicationContext)
         val repository = BudgetRepository(database)
@@ -104,6 +113,7 @@ class MainActivity : FragmentActivity() {
                 val triggerAuth = {
                     authError = null
                     if (!BiometricLockManager.canAuthenticate(this)) {
+                        sessionUnlocked = true
                         isUnlocked = true
                     } else if (!isAuthenticating) {
                         isAuthenticating = true
@@ -111,6 +121,7 @@ class MainActivity : FragmentActivity() {
                             activity = this,
                             onSuccess = {
                                 isAuthenticating = false
+                                sessionUnlocked = true
                                 isUnlocked = true
                             },
                             onError = { msg ->
@@ -240,8 +251,9 @@ class MainActivity : FragmentActivity() {
         if (!isChangingConfigurations) {
             // 退回桌面/后台时安全应用已选择的桌面图标，避免前台被系统杀进程
             AppIconManager.applyPendingIconIfNeeded(applicationContext)
-            // 切到后台或退出 APP 时立即上锁（排除横竖屏旋转及系统生物识别弹窗本身）
+            // 切到后台或退出 APP 时立即上锁（排除深浅色切换/横竖屏旋转及系统生物识别弹窗本身）
             if (!isAuthenticating && BiometricLockManager.isLockEnabled(this)) {
+                sessionUnlocked = false
                 isUnlocked = false
                 authError = null
             }
