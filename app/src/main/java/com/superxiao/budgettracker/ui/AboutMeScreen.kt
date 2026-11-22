@@ -97,7 +97,7 @@ fun AboutMeScreen(
             )
 
             Text(
-                text = "超级魈的记账工具 v2.0",
+                text = "超级魈的记账工具 v2.5",
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )

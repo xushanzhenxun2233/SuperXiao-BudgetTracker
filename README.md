@@ -9,7 +9,7 @@
 一款**纯离线、零网络权限、金融级整数分精度**的 Android 原生减法预算管控工具。  
 拒绝事后焦虑式「累计记账」与臃肿分类图表，以**预算倒扣模型 + 每日结余推演 + 系统级零摩擦录入**为核心，用现代 Android 工程实践打造极致克制且可靠的本地财务工具。
 
-> **立即下载 APK**：前往 [Releases v2.0](https://github.com/xushanzhenxun2233/SuperXiao-BudgetTracker/releases/tag/v2.0) 获取最新构建的 `SuperXiao-BudgetTracker-v2.0.apk`。
+> **立即下载 APK**：前往 [Releases v2.5](https://github.com/xushanzhenxun2233/SuperXiao-BudgetTracker/releases/tag/v2.5) 获取最新构建的 `SuperXiao-BudgetTracker-v2.5.apk`。
 
 ---
 
@@ -36,7 +36,7 @@
     </td>
     <td align="center" width="50%">
       <img src="docs/screenshots/release_overview.jpg" alt="04 v2.0 工程特性与开源发布" width="100%" /><br />
-      <b>04 · v2.0 开源工程规格</b><br />
+      <b>04 · v2.5 开源工程规格</b><br />
       <sub>零 INTERNET 权限 · Room 事务一致写入 · Material You 动态取色与深浅色适配</sub>
     </td>
   </tr>
