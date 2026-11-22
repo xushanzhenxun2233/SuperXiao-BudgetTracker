@@ -32,9 +32,9 @@ data class PeriodHistorySummary(
 data class BudgetUiState(
     val isLoaded: Boolean = false,
     val activePeriodId: Long = 0L,
-    val totalBudgetCents: Long = 300_000L,
+    val totalBudgetCents: Long = 100_000L,
     val spentCents: Long = 0L,
-    val remainingCents: Long = 300_000L,
+    val remainingCents: Long = 100_000L,
     val startDate: LocalDate = YearMonth.now().atDay(1),
     val endDate: LocalDate = YearMonth.now().atEndOfMonth(),
     val today: LocalDate = LocalDate.now(),

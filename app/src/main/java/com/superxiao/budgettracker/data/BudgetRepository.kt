@@ -20,7 +20,7 @@ class BudgetRepository(private val database: BudgetDatabase) {
                 val ym = YearMonth.from(today)
                 dao.insertPeriod(
                     BudgetPeriodEntity(
-                        totalBudgetCents = 300_000L, // 默认 ¥3000.00
+                        totalBudgetCents = 100_000L, // 默认 ¥1000.00
                         startDateEpochDay = ym.atDay(1).toEpochDay(),
                         endDateEpochDay = ym.atEndOfMonth().toEpochDay(),
                         customDailyBudgetCents = null,
@@ -29,10 +29,10 @@ class BudgetRepository(private val database: BudgetDatabase) {
                 )
             }
             if (dao.getQuickButtonCount() == 0) {
-                dao.insertQuickButton(QuickButtonEntity(label = "早餐", amountCents = 1_000L, sortOrder = 0))
-                dao.insertQuickButton(QuickButtonEntity(label = "午餐", amountCents = 2_500L, sortOrder = 1))
-                dao.insertQuickButton(QuickButtonEntity(label = "咖啡", amountCents = 1_500L, sortOrder = 2))
-                dao.insertQuickButton(QuickButtonEntity(label = "交通", amountCents = 500L, sortOrder = 3))
+                dao.insertQuickButton(QuickButtonEntity(label = "早饭", amountCents = 500L, sortOrder = 0))
+                dao.insertQuickButton(QuickButtonEntity(label = "午饭", amountCents = 1_200L, sortOrder = 1))
+                dao.insertQuickButton(QuickButtonEntity(label = "晚饭", amountCents = 1_200L, sortOrder = 2))
+                dao.insertQuickButton(QuickButtonEntity(label = "奶茶", amountCents = 600L, sortOrder = 3))
             }
         }
     }
